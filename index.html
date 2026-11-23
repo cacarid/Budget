@@ -1,0 +1,1197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0b">
+  <title>Savings Goal Budget</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: #f5eff0;
+      background: #0a0a0b;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      --green: #e3293b;
+      --muted: #aaa0a2;
+      --border: #292527;
+      --card: #151314;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 0;
+      padding: 24px 16px 40px;
+      background:
+        radial-gradient(ellipse at 15% 0%, rgb(112 19 31 / 30%), transparent 34rem),
+        #0a0a0b;
+    }
+
+    main {
+      width: min(100%, 448px);
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin: 0 2px 20px;
+    }
+
+    .brand-mark {
+      display: grid;
+      flex: 0 0 46px;
+      width: 46px;
+      height: 46px;
+      place-items: center;
+      border-radius: 15px;
+      background: var(--green);
+      color: #fff;
+      font-size: 1.25rem;
+      font-weight: 700;
+      box-shadow: 0 6px 18px rgb(227 41 59 / 24%);
+    }
+
+    .eyebrow {
+      margin: 0 0 3px;
+      color: var(--green);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      letter-spacing: -0.035em;
+    }
+
+    header p:last-child {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+
+    .card {
+      margin-top: 14px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--card);
+      box-shadow: 0 8px 24px rgb(0 0 0 / 24%);
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: -0.015em;
+    }
+
+    .outlook-card {
+      border: 0;
+      background: linear-gradient(145deg, #101011 0%, #211012 100%);
+      color: #fff;
+      box-shadow: 0 14px 30px rgb(0 0 0 / 40%);
+    }
+
+    .outlook-card h2 { color: #fff; }
+
+    .goal-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .goal-heading .eyebrow { color: #ff8994; }
+
+    .goal-total {
+      margin-top: 5px;
+      font-size: 0.83rem;
+      color: #dfcdd0;
+    }
+
+    .goal-total strong {
+      margin-right: 5px;
+      color: #fff;
+      font-size: 1.55rem;
+      letter-spacing: -0.045em;
+    }
+
+    .goal-badge {
+      display: grid;
+      min-width: 57px;
+      min-height: 57px;
+      align-content: center;
+      justify-items: center;
+      border: 1px solid rgb(255 255 255 / 20%);
+      border-radius: 18px;
+      background: rgb(255 255 255 / 10%);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .goal-badge span {
+      margin-top: 1px;
+      color: #e8cdd0;
+      font-size: 0.62rem;
+      font-weight: 500;
+    }
+
+    .progress-track {
+      height: 9px;
+      margin-top: 17px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: rgb(255 255 255 / 13%);
+    }
+
+    .progress-bar {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: #f04453;
+      transition: width 180ms ease;
+    }
+
+    .progress-copy {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 7px 0 0;
+      color: #dfcdd0;
+      font-size: 0.75rem;
+    }
+
+    .monthly-callout {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #282122;
+      color: #eadfe0;
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    .monthly-callout strong {
+      color: #ff6876;
+      font-size: 1.7rem;
+      letter-spacing: -0.045em;
+    }
+
+    .summary {
+      margin: 12px 1px 0;
+      color: #dfcdd0;
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
+    .results {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .metric {
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid rgb(255 255 255 / 10%);
+      border-radius: 14px;
+      background: rgb(255 255 255 / 6%);
+    }
+
+    .metric span {
+      display: block;
+      color: #d7c6c8;
+      font-size: 0.7rem;
+      line-height: 1.35;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 5px;
+      color: #fff;
+      font-size: 1.02rem;
+      letter-spacing: -0.02em;
+      overflow-wrap: anywhere;
+    }
+
+    .notice {
+      margin: 12px 0 0;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #30191c;
+      color: #ffd2d6;
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+
+    .status {
+      min-height: 1.3em;
+      margin: 10px 0 0;
+      color: #dfcdd0;
+      font-size: 0.72rem;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 9px;
+    }
+
+    .section-hint {
+      color: #9c8f91;
+      font-size: 0.63rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+
+    .fields {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 56px;
+      border-bottom: 1px solid #302a2b;
+      color: #e1d8d9;
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    label:last-child { border-bottom: 0; }
+
+    input {
+      width: 132px;
+      min-width: 0;
+      min-height: 42px;
+      padding: 8px 10px;
+      border: 1px solid #3a3334;
+      border-radius: 11px;
+      background: #211e1f;
+      color: #f5eff0;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    input[type="date"] {
+      width: 150px;
+      font-size: 0.82rem;
+    }
+
+    input:focus-visible, button:focus-visible {
+      outline: 3px solid #ff5968;
+      outline-offset: 2px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 16px;
+    }
+
+    .page-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 5px;
+      margin: 0 0 14px;
+      padding: 5px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: #151314;
+    }
+
+    .page-tab {
+      min-height: 40px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .page-tab[aria-pressed="true"] {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .calendar-card { padding: 17px; }
+
+    .month-switcher {
+      display: grid;
+      grid-template-columns: 42px 1fr 42px;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .month-switcher h2 { font-size: 1.05rem; }
+
+    .month-button {
+      width: 42px;
+      min-height: 42px;
+      padding: 0;
+      border-color: #3a3334;
+      background: #211e1f;
+      color: #ff7580;
+      font-size: 1.15rem;
+    }
+
+    .calendar-weekdays, .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 4px;
+    }
+
+    .calendar-weekdays {
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 0.66rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .calendar-weekdays span { padding: 4px 0; }
+
+    .day-placeholder { min-height: 46px; }
+
+    .day-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 4px;
+      width: 100%;
+      min-width: 0;
+      min-height: 46px;
+      padding: 6px 1px 4px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: #211e1f;
+      color: #e8e0e1;
+      font-size: 0.73rem;
+    }
+
+    .day-cell[aria-pressed="true"] {
+      border-color: #f04453;
+      background: #3a171c;
+      color: #fff;
+    }
+
+    .day-cell.is-today .day-number {
+      display: grid;
+      width: 20px;
+      height: 20px;
+      place-items: center;
+      border-radius: 50%;
+      background: #e3293b;
+      color: #fff;
+    }
+
+    .day-markers {
+      display: flex;
+      min-height: 5px;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+    }
+
+    .day-marker {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #fa5967;
+    }
+
+    .day-marker.bill { background: #f4d0d3; }
+
+    .selected-day {
+      margin-top: 15px;
+      padding-top: 13px;
+      border-top: 1px solid #302a2b;
+    }
+
+    .selected-day h3 {
+      margin: 0 0 10px;
+      font-size: 0.88rem;
+    }
+
+    .event-list {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .event-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 40px;
+      padding: 8px 10px;
+      border: 1px solid #32292b;
+      border-radius: 11px;
+      background: #201b1c;
+      font-size: 0.78rem;
+    }
+
+    .event-item.payout { border-left: 3px solid #f04453; }
+    .event-item.bill, .event-item.groceries { border-left: 3px solid #f4d0d3; }
+    .event-item strong { color: #ff8791; white-space: nowrap; }
+
+    .calendar-help {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 0.76rem;
+      line-height: 1.45;
+    }
+
+    .calendar-fields { margin-top: 8px; }
+    .calendar-fields label { min-height: 54px; }
+    .calendar-fields input { width: 112px; }
+    .calendar-fields input[type="number"] { text-align: right; }
+    .bill-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-height: 57px;
+      border-bottom: 1px solid #302a2b;
+    }
+
+    .bill-row:last-child { border-bottom: 0; }
+    .bill-row[hidden] { display: none; }
+    .bill-info { display: grid; gap: 3px; min-width: 0; }
+    .bill-name { color: #e1d8d9; font-size: 0.8rem; font-weight: 600; }
+    .bill-amount { color: var(--muted); font-size: 0.72rem; }
+    .bill-row label {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 7px;
+      min-height: auto;
+      border: 0;
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+    .bill-row input {
+      width: 70px;
+      min-height: 38px;
+      padding: 6px 8px;
+      text-align: center;
+    }
+
+    .credit-card-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 80px;
+      gap: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid #302a2b;
+    }
+
+    .credit-card-row label {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+      min-height: 0;
+      border: 0;
+      color: #e1d8d9;
+      font-size: 0.75rem;
+    }
+
+    .credit-card-row input {
+      width: 100%;
+      text-align: left;
+    }
+
+    .credit-card-row input[type="number"] { text-align: center; }
+    .credit-card-heading { margin-top: 20px; }
+
+    .card-payment-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .card-payment-heading strong {
+      color: #ff8791;
+      font-size: 0.9rem;
+    }
+    .card-payment-heading h3 {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    button {
+      min-height: 44px;
+      padding: 9px 14px;
+      border: 1px solid #4a2b30;
+      border-radius: 12px;
+      background: #191516;
+      color: #ff7580;
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    @media (max-width: 360px) {
+      body { padding-right: 12px; padding-left: 12px; }
+      .card { padding: 17px; }
+      input { width: 118px; }
+      input[type="date"] { width: 138px; }
+      .calendar-card { padding: 13px; }
+      .calendar-weekdays, .calendar-grid { gap: 2px; }
+      .day-cell { min-height: 42px; }
+      .bill-row label { gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <span class="brand-mark" aria-hidden="true">$</span>
+      <div>
+        <p class="eyebrow">Your money plan</p>
+        <h1>My savings plan</h1>
+        <p>Small steps, one goal at a time.</p>
+      </div>
+    </header>
+
+    <nav class="page-tabs" aria-label="Budget pages">
+        <button class="page-tab" type="button" data-page="overview" aria-pressed="true">Overview</button>
+        <button class="page-tab" type="button" data-page="calendar" aria-pressed="false">Calendar</button>
+    </nav>
+
+    <div id="overview-page">
+    <section class="card outlook-card" aria-labelledby="outlook-heading" aria-live="polite">
+      <div class="goal-heading">
+        <div>
+          <p class="eyebrow">Your target</p>
+          <h2 id="outlook-heading">Savings goal</h2>
+          <div class="goal-total"><strong id="goal-display">$0.00</strong><span>by <span id="deadline-display">Choose a date</span></span></div>
+        </div>
+        <div class="goal-badge"><span id="progress-label">0%</span><span>saved</span></div>
+      </div>
+      <div class="progress-track" role="progressbar" aria-label="Savings goal progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <p class="progress-copy"><span id="saved-label">$0.00 saved</span><span><span id="still-needed">$0.00</span> left</span></p>
+      <div class="monthly-callout">
+        <span>Set aside each month</span>
+        <strong id="monthly-savings">—</strong>
+      </div>
+      <p class="summary" id="summary">Enter a savings goal greater than zero to calculate your plan.</p>
+      <div class="results">
+        <div class="metric">
+          <span>Total listed monthly expenses</span>
+          <strong id="total-expenses">$0.00</strong>
+        </div>
+        <div class="metric">
+          <span>Left after listed expenses and savings</span>
+          <strong id="leftover">—</strong>
+        </div>
+      </div>
+      <p class="notice" id="notice">This leftover only subtracts the expenses listed here. Add housing, utilities, transportation, insurance, and other spending before treating it as available.</p>
+      <p class="status" id="save-status" role="status">Your numbers are saved in this browser.</p>
+    </section>
+
+    <section class="card" aria-labelledby="plan-heading">
+      <div class="section-heading">
+        <h2 id="plan-heading">Your plan</h2>
+        <span class="section-hint">EDIT ANYTIME</span>
+      </div>
+      <div class="fields">
+        <label for="income">Monthly take-home income ($)
+          <input id="income" type="number" min="0" step="0.01" value="0" inputmode="decimal">
+        </label>
+        <label for="current">Already saved ($)
+          <input id="current" type="number" min="0" step="0.01" value="0" inputmode="decimal">
+        </label>
+        <label for="goal">Savings goal ($)
+          <input id="goal" type="number" min="0" step="0.01" value="0" inputmode="decimal">
+        </label>
+        <label for="deadline">Save by
+          <input id="deadline" type="date">
+        </label>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="expenses-heading">
+      <div class="section-heading">
+        <h2 id="expenses-heading">Monthly expenses</h2>
+        <span class="section-hint">EDIT ANYTIME</span>
+      </div>
+      <div class="fields">
+        <label for="phone">Phone ($)
+          <input id="phone" type="number" min="0" step="0.01" value="0" inputmode="decimal">
+        </label>
+        <label for="ihg">IHG payment ($)
+          <input id="ihg" type="number" min="0" step="0.01" value="0" inputmode="decimal">
+        </label>
+        <label for="college">College payment ($)
+          <input id="college" type="number" min="0" step="0.01" value="0" inputmode="decimal">
+        </label>
+        <label for="gym">Gym payment ($)
+          <input id="gym" type="number" min="0" step="0.01" value="0" inputmode="decimal">
+        </label>
+        <label for="groceries">Groceries ($)
+          <input id="groceries" type="number" min="0" step="0.01" value="0" inputmode="decimal">
+        </label>
+      </div>
+      <div class="card-payment-heading">
+        <h3>Credit-card payments</h3>
+        <strong id="cards-overview-total">$0.00 total</strong>
+      </div>
+      <input id="cards" type="hidden" value="0">
+      <div class="fields">
+        <label for="card-1-amount"><span id="card-1-amount-label">Card 1 payment ($)</span>
+          <input id="card-1-amount" type="number" min="0" step="0.01" value="0" placeholder="--" inputmode="decimal">
+        </label>
+        <label for="card-2-amount"><span id="card-2-amount-label">Card 2 payment ($)</span>
+          <input id="card-2-amount" type="number" min="0" step="0.01" value="0" placeholder="--" inputmode="decimal">
+        </label>
+        <label for="card-3-amount"><span id="card-3-amount-label">Card 3 payment ($)</span>
+          <input id="card-3-amount" type="number" min="0" step="0.01" value="0" placeholder="--" inputmode="decimal">
+        </label>
+      </div>
+      <p class="calendar-help" id="card-payment-status" role="status"></p>
+      <div class="actions">
+        <button id="reset" type="button">Reset to defaults</button>
+      </div>
+    </section>
+    </div>
+
+    <section id="calendar-page" hidden aria-labelledby="calendar-heading">
+      <div class="card calendar-card">
+        <div class="month-switcher">
+          <button class="month-button" id="previous-month" type="button" aria-label="Previous month">‹</button>
+          <h2 id="calendar-heading">Calendar</h2>
+          <button class="month-button" id="next-month" type="button" aria-label="Next month">›</button>
+        </div>
+        <div class="calendar-weekdays" aria-hidden="true">
+          <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+        </div>
+        <div class="calendar-grid" id="calendar-grid" role="group" aria-label="Calendar days"></div>
+        <div class="selected-day" aria-live="polite">
+          <h3 id="selected-day-title">Events</h3>
+          <ul class="event-list" id="event-list"></ul>
+        </div>
+        <p class="calendar-help">Red markers are Friday payouts; light markers are bills or Sunday groceries.</p>
+      </div>
+
+      <div class="card">
+        <div class="section-heading">
+          <h2>Weekly payout</h2>
+          <span class="section-hint">EVERY FRIDAY</span>
+        </div>
+        <div class="calendar-fields">
+          <label for="weekly-payout">Take-home payout ($)
+            <input id="weekly-payout" type="number" min="0" step="0.01" value="0" inputmode="decimal">
+          </label>
+        </div>
+        <p class="calendar-help">Enter your usual Friday deposit. This is separate from the monthly income on Overview.</p>
+      </div>
+
+      <div class="card">
+        <div class="section-heading">
+          <h2>Groceries</h2>
+          <span class="section-hint">EVERY SUNDAY</span>
+        </div>
+        <p class="calendar-help">Monthly grocery budget: <strong id="groceries-bill-amount">$0.00</strong>. This is not a weekly amount; edit it in Overview.</p>
+      </div>
+
+      <div class="card">
+        <div class="section-heading">
+          <h2>Monthly bill dates</h2>
+          <span class="section-hint">REPEATS MONTHLY</span>
+        </div>
+        <div class="bill-row">
+          <div class="bill-info"><span class="bill-name">Phone</span><span class="bill-amount" id="phone-bill-amount">$0.00</span></div>
+          <label for="phone-due">Day
+            <input id="phone-due" type="number" min="1" max="31" step="1" placeholder="--" inputmode="numeric">
+          </label>
+        </div>
+        <div class="bill-row">
+          <div class="bill-info"><span class="bill-name">IHG payment</span><span class="bill-amount" id="ihg-bill-amount">$0.00</span></div>
+          <label for="ihg-due">Day
+            <input id="ihg-due" type="number" min="1" max="31" step="1" placeholder="--" inputmode="numeric">
+          </label>
+        </div>
+        <div class="bill-row">
+          <div class="bill-info"><span class="bill-name">College payment</span><span class="bill-amount" id="college-bill-amount">$0.00</span></div>
+          <label for="college-due">Day
+            <input id="college-due" type="number" min="1" max="31" step="1" placeholder="--" inputmode="numeric">
+          </label>
+        </div>
+        <div class="bill-row">
+          <div class="bill-info"><span class="bill-name">Gym payment</span><span class="bill-amount" id="gym-bill-amount">$0.00</span></div>
+          <label for="gym-due">Day
+            <input id="gym-due" type="number" min="1" max="31" step="1" placeholder="--" inputmode="numeric">
+          </label>
+        </div>
+        <div class="bill-row" id="legacy-card-row" hidden>
+          <div class="bill-info"><span class="bill-name">Previous combined card date</span><span class="bill-amount">Clear after assigning to a card</span></div>
+          <label for="cards-due">Day
+            <input id="cards-due" type="number" min="1" max="31" step="1" placeholder="--" inputmode="numeric">
+          </label>
+        </div>
+        <p class="calendar-help">Enter a day from 1 to 31. Days 29–31 only appear in months that include them.</p>
+
+        <div class="section-heading credit-card-heading">
+          <h2>Credit cards</h2>
+          <span class="section-hint">REPEATS MONTHLY</span>
+        </div>
+        <p class="calendar-help">Combined monthly payment used in the budget: <strong id="cards-bill-amount">$0.00</strong>. Edit individual amounts in Overview.</p>
+        <p class="calendar-help" id="calendar-card-status"></p>
+        <div class="credit-card-row">
+          <label for="card-1-name">Card 1 name
+            <input id="card-1-name" type="text" maxlength="40" value="Card 1">
+          </label>
+          <label for="card-1-due">Due day
+            <input id="card-1-due" type="number" min="1" max="31" step="1" placeholder="--" inputmode="numeric" aria-label="Card 1 due day">
+          </label>
+        </div>
+        <div class="credit-card-row">
+          <label for="card-2-name">Card 2 name
+            <input id="card-2-name" type="text" maxlength="40" value="Card 2">
+          </label>
+          <label for="card-2-due">Due day
+            <input id="card-2-due" type="number" min="1" max="31" step="1" placeholder="--" inputmode="numeric" aria-label="Card 2 due day">
+          </label>
+        </div>
+        <div class="credit-card-row">
+          <label for="card-3-name">Card 3 name
+            <input id="card-3-name" type="text" maxlength="40" value="Card 3">
+          </label>
+          <label for="card-3-due">Due day
+            <input id="card-3-due" type="number" min="1" max="31" step="1" placeholder="--" inputmode="numeric" aria-label="Card 3 due day">
+          </label>
+        </div>
+        <p class="calendar-help" id="calendar-status" role="status"></p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const storageKey = "savings-goal-budget-v1";
+    const budgetInputIds = [
+      "income", "current", "goal", "deadline", "phone", "ihg", "college", "gym", "groceries", "cards",
+      "card-1-amount", "card-2-amount", "card-3-amount"
+    ];
+    const calendarInputIds = [
+      "weekly-payout", "phone-due", "ihg-due", "college-due", "gym-due", "cards-due",
+      "card-1-name", "card-1-due", "card-2-name", "card-2-due", "card-3-name", "card-3-due"
+    ];
+    const inputIds = [...budgetInputIds, ...calendarInputIds];
+    const defaults = {
+      income: "0",
+      current: "0",
+      goal: "0",
+      deadline: "",
+      phone: "0",
+      ihg: "0",
+      college: "0",
+      gym: "0",
+      groceries: "0",
+      cards: "0",
+      "card-1-amount": "0",
+      "card-2-amount": "0",
+      "card-3-amount": "0",
+      "weekly-payout": "0",
+      "phone-due": "",
+      "ihg-due": "",
+      "college-due": "",
+      "gym-due": "",
+      "cards-due": "",
+      "card-1-name": "Card 1",
+      "card-1-due": "",
+      "card-2-name": "Card 2",
+      "card-2-due": "",
+      "card-3-name": "Card 3",
+      "card-3-due": ""
+    };
+    const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
+    const billSchedules = [
+      { name: "Phone", amountId: "phone", dueId: "phone-due", displayId: "phone-bill-amount" },
+      { name: "IHG payment", amountId: "ihg", dueId: "ihg-due", displayId: "ihg-bill-amount" },
+      { name: "College payment", amountId: "college", dueId: "college-due", displayId: "college-bill-amount" },
+      { name: "Gym payment", amountId: "gym", dueId: "gym-due", displayId: "gym-bill-amount" },
+      { name: "Credit-card payments", amountId: "cards", dueId: "cards-due", displayId: "cards-bill-amount" }
+    ];
+    const creditCards = [1, 2, 3].map((number) => ({
+      nameId: `card-${number}-name`,
+      dueId: `card-${number}-due`,
+      amountId: `card-${number}-amount`,
+      amountLabelId: `card-${number}-amount-label`,
+      fallbackName: `Card ${number}`
+    }));
+    const calendarMonth = new Date();
+    calendarMonth.setDate(1);
+    let selectedDate = new Date();
+
+    function readAmount(id) {
+      const value = Number(document.getElementById(id).value);
+      return Number.isFinite(value) && value >= 0 ? value : null;
+    }
+
+    function readCardAmount(id) {
+      const input = document.getElementById(id);
+      if (input.value === "" || !input.validity.valid) return null;
+      return readAmount(id);
+    }
+
+    function updateCardPayments() {
+      const amounts = creditCards.map((card) => readCardAmount(card.amountId));
+      const allEntered = amounts.every((amount) => amount !== null);
+      const invalid = creditCards.some((card) => {
+        const input = document.getElementById(card.amountId);
+        return input.validity.badInput || (input.value !== "" && !input.validity.valid);
+      });
+      if (allEntered) {
+        const totalCents = amounts.reduce((sum, amount) => sum + Math.round(amount * 100), 0);
+        document.getElementById("cards").value = (totalCents / 100).toFixed(2);
+      }
+
+      const total = readAmount("cards");
+      document.getElementById("cards-overview-total").textContent = `${currency.format(total)} total`;
+      let status;
+      if (allEntered) {
+        status = "Total calculated from the three individual payments.";
+      } else if (invalid) {
+        status = `Enter nonnegative payment amounts with at most two decimal places. The budget is still using the previous ${currency.format(total)} combined total.`;
+      } else {
+        status = `The budget is using the previous ${currency.format(total)} combined total. Enter all three payments (use 0 if needed) to calculate a new total.`;
+      }
+      document.getElementById("card-payment-status").textContent = status;
+      document.getElementById("calendar-card-status").textContent = status;
+    }
+
+    function getRemainingMonths(deadlineValue) {
+      if (!deadlineValue) return null;
+      const [year, month, day] = deadlineValue.split("-").map(Number);
+      const deadline = new Date(year, month - 1, day);
+      if (Number.isNaN(deadline.getTime())) return null;
+
+      const now = new Date();
+      const firstSavingMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+      const lastSavingMonth = new Date(deadline.getFullYear(), deadline.getMonth(), 1);
+      if (lastSavingMonth < firstSavingMonth) return 0;
+      return (lastSavingMonth.getFullYear() - firstSavingMonth.getFullYear()) * 12
+        + lastSavingMonth.getMonth() - firstSavingMonth.getMonth() + 1;
+    }
+
+    function sameDate(first, second) {
+      return first.getFullYear() === second.getFullYear()
+        && first.getMonth() === second.getMonth()
+        && first.getDate() === second.getDate();
+    }
+
+    function getEventsForDate(date) {
+      const events = [];
+      if (date.getDay() === 5) {
+        const payoutInput = document.getElementById("weekly-payout");
+        const payout = payoutInput.value === "" ? null : readAmount("weekly-payout");
+        events.push({ type: "payout", name: "Friday payout", amount: payout });
+      }
+      if (date.getDay() === 0) {
+        events.push({ type: "groceries", name: "Groceries (monthly budget)", amount: readAmount("groceries") });
+      }
+
+      const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+      billSchedules.forEach((bill) => {
+        const dueValue = document.getElementById(bill.dueId).value;
+        const dueDay = Number(dueValue);
+        if (dueValue && Number.isInteger(dueDay) && dueDay >= 1 && dueDay <= lastDay && dueDay === date.getDate()) {
+          events.push({
+            type: "bill",
+            name: bill.name,
+            amount: readAmount(bill.amountId)
+          });
+        }
+      });
+      creditCards.forEach((card) => {
+        const dueValue = document.getElementById(card.dueId).value;
+        const dueDay = Number(dueValue);
+        if (dueValue && Number.isInteger(dueDay) && dueDay >= 1 && dueDay <= lastDay && dueDay === date.getDate()) {
+          const name = document.getElementById(card.nameId).value.trim() || card.fallbackName;
+          events.push({ type: "bill", name: `${name} payment`, amount: readCardAmount(card.amountId) });
+        }
+      });
+      return events;
+    }
+
+    function renderSelectedDay() {
+      const title = document.getElementById("selected-day-title");
+      const eventList = document.getElementById("event-list");
+      const dateLabel = new Intl.DateTimeFormat("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+      }).format(selectedDate);
+      title.textContent = dateLabel;
+      eventList.replaceChildren();
+
+      const events = getEventsForDate(selectedDate);
+      if (events.length === 0) {
+        const emptyItem = document.createElement("li");
+        emptyItem.className = "calendar-help";
+        emptyItem.textContent = "No payouts or bills scheduled for this date.";
+        eventList.appendChild(emptyItem);
+        return;
+      }
+
+      events.forEach((event) => {
+        const item = document.createElement("li");
+        item.className = `event-item ${event.type}`;
+        const name = document.createElement("span");
+        name.textContent = event.name;
+        item.appendChild(name);
+        if (event.amount !== null) {
+          const amount = document.createElement("strong");
+          amount.textContent = currency.format(event.amount);
+          item.appendChild(amount);
+        }
+        eventList.appendChild(item);
+      });
+    }
+
+    function renderCalendar() {
+      const year = calendarMonth.getFullYear();
+      const month = calendarMonth.getMonth();
+      const grid = document.getElementById("calendar-grid");
+      const monthLabel = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" });
+      document.getElementById("calendar-heading").textContent = monthLabel.format(calendarMonth);
+      grid.replaceChildren();
+
+      const firstWeekday = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      for (let blank = 0; blank < firstWeekday; blank += 1) {
+        const placeholder = document.createElement("span");
+        placeholder.className = "day-placeholder";
+        placeholder.setAttribute("aria-hidden", "true");
+        grid.appendChild(placeholder);
+      }
+
+      for (let day = 1; day <= daysInMonth; day += 1) {
+        const date = new Date(year, month, day);
+        const events = getEventsForDate(date);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "day-cell";
+        button.setAttribute("aria-pressed", String(sameDate(date, selectedDate)));
+        const dateLabel = new Intl.DateTimeFormat("en-US", {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+          year: "numeric"
+        }).format(date);
+        const eventNames = events.map((event) => event.name);
+        button.setAttribute("aria-label", eventNames.length ? `${dateLabel}: ${eventNames.join(", ")}` : dateLabel);
+
+        if (sameDate(date, new Date())) button.classList.add("is-today");
+        const number = document.createElement("span");
+        number.className = "day-number";
+        number.textContent = String(day);
+        button.appendChild(number);
+
+        const markers = document.createElement("span");
+        markers.className = "day-markers";
+        if (events.some((event) => event.type === "payout")) {
+          const marker = document.createElement("span");
+          marker.className = "day-marker";
+          markers.appendChild(marker);
+        }
+        if (events.some((event) => event.type === "bill" || event.type === "groceries")) {
+          const marker = document.createElement("span");
+          marker.className = "day-marker bill";
+          markers.appendChild(marker);
+        }
+        button.appendChild(markers);
+        button.addEventListener("click", () => {
+          selectedDate = date;
+          renderCalendar();
+        });
+        grid.appendChild(button);
+      }
+
+      billSchedules.forEach((bill) => {
+        const amount = readAmount(bill.amountId);
+        document.getElementById(bill.displayId).textContent = amount === null ? "—" : currency.format(amount);
+      });
+      creditCards.forEach((card) => {
+        const name = document.getElementById(card.nameId).value.trim() || card.fallbackName;
+        document.getElementById(card.amountLabelId).textContent = `${name} payment ($)`;
+      });
+      document.getElementById("legacy-card-row").hidden = document.getElementById("cards-due").value === "";
+      const groceryBudget = readAmount("groceries");
+      document.getElementById("groceries-bill-amount").textContent = groceryBudget === null ? "—" : currency.format(groceryBudget);
+      const invalidDay = calendarInputIds.filter((id) => id.endsWith("-due")).some((id) => {
+        const input = document.getElementById(id);
+        const day = Number(input.value);
+        return input.validity.badInput || (input.value !== "" && (!Number.isInteger(day) || day < 1 || day > 31));
+      });
+      document.getElementById("calendar-status").textContent = invalidDay
+        ? "Enter a whole due day from 1 to 31. Invalid dates are not scheduled."
+        : "";
+      renderSelectedDay();
+    }
+
+    function saveInputs() {
+      const values = {};
+      inputIds.forEach((id) => { values[id] = document.getElementById(id).value; });
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(values));
+        document.getElementById("save-status").textContent = "Your numbers are saved in this browser.";
+      } catch (error) {
+        document.getElementById("save-status").textContent = "Browser storage is unavailable; your changes will last only in this tab.";
+        document.getElementById("calendar-status").textContent = "Browser storage is unavailable; your changes will last only in this tab.";
+      }
+    }
+
+    function updateBudget() {
+      updateCardPayments();
+      const income = readAmount("income");
+      const current = readAmount("current");
+      const goal = readAmount("goal");
+      const expenseIds = ["phone", "ihg", "college", "gym", "groceries", "cards"];
+      const expenses = expenseIds.map(readAmount);
+      const invalid = income === null || current === null || goal === null || expenses.includes(null);
+
+      if (invalid) {
+        document.getElementById("save-status").textContent = "Enter zero or a positive amount in every money field.";
+        return;
+      }
+
+      const totalExpenses = expenses.reduce((sum, amount) => sum + amount, 0);
+      const stillNeeded = Math.max(0, goal - current);
+      const months = getRemainingMonths(document.getElementById("deadline").value);
+      const monthlySavings = goal === 0 ? null : stillNeeded === 0 ? 0 : months ? Math.ceil(stillNeeded / months * 100) / 100 : null;
+      const leftover = monthlySavings === null ? null : income - totalExpenses - monthlySavings;
+
+      document.getElementById("monthly-savings").textContent = monthlySavings === null ? "—" : currency.format(monthlySavings);
+      document.getElementById("still-needed").textContent = currency.format(stillNeeded);
+      document.getElementById("total-expenses").textContent = currency.format(totalExpenses);
+      document.getElementById("leftover").textContent = leftover === null ? "—" : currency.format(leftover);
+
+      const progress = goal > 0 ? Math.min(100, current / goal * 100) : 0;
+      document.getElementById("goal-display").textContent = currency.format(goal);
+      document.getElementById("saved-label").textContent = `${currency.format(current)} saved`;
+      document.getElementById("progress-label").textContent = `${Math.round(progress)}%`;
+      document.getElementById("progress-bar").style.width = `${progress}%`;
+      const progressTrack = document.querySelector(".progress-track");
+      progressTrack.setAttribute("aria-valuenow", String(Math.round(progress)));
+      const deadlineValue = document.getElementById("deadline").value;
+      if (deadlineValue) {
+        const [year, month, day] = deadlineValue.split("-").map(Number);
+        const deadlineDate = new Date(year, month - 1, day);
+        document.getElementById("deadline-display").textContent = new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric"
+        }).format(deadlineDate);
+      } else {
+        document.getElementById("deadline-display").textContent = "Choose a date";
+      }
+
+      const summary = document.getElementById("summary");
+      const notice = document.getElementById("notice");
+      if (goal === 0) {
+        summary.textContent = "Enter a savings goal greater than zero to calculate your plan.";
+      } else if (stillNeeded === 0) {
+        summary.textContent = "You have already reached your savings goal.";
+      } else if (months === null || months === 0) {
+        summary.textContent = "Choose a future deadline to calculate a monthly savings amount.";
+      } else {
+        const now = new Date();
+        const firstMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        const lastMonth = new Date(firstMonth.getFullYear(), firstMonth.getMonth() + months - 1, 1);
+        const monthNames = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" });
+        summary.textContent = `You have ${months} monthly contribution${months === 1 ? "" : "s"} (${monthNames.format(firstMonth)} through ${monthNames.format(lastMonth)}) to reach your goal.`;
+      }
+
+      if (leftover !== null && leftover < 0) {
+        notice.textContent = `Your listed expenses plus the needed savings exceed your take-home income by ${currency.format(Math.abs(leftover))} per month. Consider lowering expenses or extending the deadline. The listed expense total may not include all bills.`;
+      } else {
+        notice.textContent = "This leftover only subtracts the expenses listed here. Add housing, utilities, transportation, insurance, and other spending before treating it as available.";
+      }
+      renderCalendar();
+      saveInputs();
+    }
+
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
+      if (saved && typeof saved === "object") {
+        inputIds.forEach((id) => {
+          if (typeof saved[id] === "string") document.getElementById(id).value = saved[id];
+        });
+        creditCards.forEach((card) => {
+          if (typeof saved[card.amountId] !== "string") document.getElementById(card.amountId).value = "";
+        });
+      }
+    } catch (error) {
+      document.getElementById("save-status").textContent = "Could not load saved numbers; starting numbers are shown.";
+    }
+
+    budgetInputIds.forEach((id) => document.getElementById(id).addEventListener("input", updateBudget));
+    calendarInputIds.forEach((id) => {
+      document.getElementById(id).addEventListener("input", () => {
+        renderCalendar();
+        saveInputs();
+      });
+    });
+    document.getElementById("reset").addEventListener("click", () => {
+      inputIds.forEach((id) => { document.getElementById(id).value = defaults[id]; });
+      updateBudget();
+    });
+
+    document.getElementById("previous-month").addEventListener("click", () => {
+      calendarMonth.setMonth(calendarMonth.getMonth() - 1);
+      selectedDate = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1);
+      renderCalendar();
+    });
+    document.getElementById("next-month").addEventListener("click", () => {
+      calendarMonth.setMonth(calendarMonth.getMonth() + 1);
+      selectedDate = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1);
+      renderCalendar();
+    });
+    document.querySelectorAll(".page-tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const calendarSelected = tab.dataset.page === "calendar";
+        document.getElementById("overview-page").hidden = calendarSelected;
+        document.getElementById("calendar-page").hidden = !calendarSelected;
+        document.querySelectorAll(".page-tab").forEach((pageTab) => {
+          pageTab.setAttribute("aria-pressed", String(pageTab === tab));
+        });
+        if (calendarSelected) renderCalendar();
+      });
+    });
+    renderCalendar();
+    updateBudget();
+  </script>
+</body>
+</html>
