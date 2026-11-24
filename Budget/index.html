@@ -311,7 +311,7 @@
 
     .page-tabs {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 5px;
       margin: 0 0 14px;
       padding: 5px;
@@ -545,6 +545,20 @@
       font-size: 0.9rem;
     }
 
+    .weekly-results {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 16px;
+    }
+
+    .weekly-note {
+      margin: 14px 0 0;
+      color: #dfcdd0;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
     button {
       min-height: 44px;
       padding: 9px 14px;
@@ -583,6 +597,7 @@
 
     <nav class="page-tabs" aria-label="Budget pages">
         <button class="page-tab" type="button" data-page="overview" aria-pressed="true">Overview</button>
+        <button class="page-tab" type="button" data-page="weekly" aria-pressed="false">Weekly</button>
         <button class="page-tab" type="button" data-page="calendar" aria-pressed="false">Calendar</button>
     </nav>
 
@@ -658,10 +673,14 @@
         <label for="gym">Gym payment ($)
           <input id="gym" type="number" min="0" step="0.01" value="0" inputmode="decimal">
         </label>
+        <label for="car-insurance">Car insurance ($)
+          <input id="car-insurance" type="number" min="0" step="0.01" placeholder="--" inputmode="decimal">
+        </label>
         <label for="groceries">Groceries ($)
           <input id="groceries" type="number" min="0" step="0.01" value="0" inputmode="decimal">
         </label>
       </div>
+      <p class="calendar-help">A blank car insurance amount is not included in the monthly total.</p>
       <div class="card-payment-heading">
         <h3>Credit-card payments</h3>
         <strong id="cards-overview-total">$0.00 total</strong>
@@ -684,6 +703,38 @@
       </div>
     </section>
     </div>
+
+    <section id="weekly-page" hidden aria-labelledby="weekly-heading">
+      <div class="card outlook-card" aria-live="polite">
+        <p class="eyebrow">Your weekly plan</p>
+        <h2 id="weekly-heading">Friday savings</h2>
+        <div class="monthly-callout">
+          <span>Suggested each Friday</span>
+          <strong id="weekly-savings">—</strong>
+        </div>
+        <p class="weekly-note" id="weekly-summary">Enter a savings goal and deadline in Overview to see your weekly pace.</p>
+        <div class="weekly-results">
+          <div class="metric">
+            <span>Remaining to save</span>
+            <strong id="weekly-remaining">$0.00</strong>
+          </div>
+          <div class="metric">
+            <span>Fridays left</span>
+            <strong id="weekly-fridays">—</strong>
+          </div>
+          <div class="metric">
+            <span>Next eligible Friday</span>
+            <strong id="weekly-next-friday">—</strong>
+          </div>
+          <div class="metric">
+            <span>Goal deadline</span>
+            <strong id="weekly-deadline">—</strong>
+          </div>
+        </div>
+        <p class="weekly-note">The plan counts Fridays from today through your deadline, including today if it is Friday. It rounds up to the nearest cent. Stop when you reach your goal; your last contribution may be smaller.</p>
+        <p class="notice">This is a suggestion, not a transfer. Update “Already saved” in Overview when you add money. The weekly pace may differ from the monthly pace because they use different starting dates.</p>
+      </div>
+    </section>
 
     <section id="calendar-page" hidden aria-labelledby="calendar-heading">
       <div class="card calendar-card">
@@ -753,6 +804,12 @@
             <input id="gym-due" type="number" min="1" max="31" step="1" placeholder="--" inputmode="numeric">
           </label>
         </div>
+        <div class="bill-row">
+          <div class="bill-info"><span class="bill-name">Car insurance</span><span class="bill-amount" id="car-insurance-bill-amount">Not entered</span></div>
+          <label for="car-insurance-due">Day
+            <input id="car-insurance-due" type="number" min="1" max="31" step="1" placeholder="--" inputmode="numeric" aria-label="Car insurance due day">
+          </label>
+        </div>
         <div class="bill-row" id="legacy-card-row" hidden>
           <div class="bill-info"><span class="bill-name">Previous combined card date</span><span class="bill-amount">Clear after assigning to a card</span></div>
           <label for="cards-due">Day
@@ -799,11 +856,11 @@
   <script>
     const storageKey = "savings-goal-budget-v1";
     const budgetInputIds = [
-      "income", "current", "goal", "deadline", "phone", "ihg", "college", "gym", "groceries", "cards",
+      "income", "current", "goal", "deadline", "phone", "ihg", "college", "gym", "car-insurance", "groceries", "cards",
       "card-1-amount", "card-2-amount", "card-3-amount"
     ];
     const calendarInputIds = [
-      "weekly-payout", "phone-due", "ihg-due", "college-due", "gym-due", "cards-due",
+      "weekly-payout", "phone-due", "ihg-due", "college-due", "gym-due", "car-insurance-due", "cards-due",
       "card-1-name", "card-1-due", "card-2-name", "card-2-due", "card-3-name", "card-3-due"
     ];
     const inputIds = [...budgetInputIds, ...calendarInputIds];
@@ -816,6 +873,7 @@
       ihg: "0",
       college: "0",
       gym: "0",
+      "car-insurance": "",
       groceries: "0",
       cards: "0",
       "card-1-amount": "0",
@@ -826,6 +884,7 @@
       "ihg-due": "",
       "college-due": "",
       "gym-due": "",
+      "car-insurance-due": "",
       "cards-due": "",
       "card-1-name": "Card 1",
       "card-1-due": "",
@@ -840,6 +899,7 @@
       { name: "IHG payment", amountId: "ihg", dueId: "ihg-due", displayId: "ihg-bill-amount" },
       { name: "College payment", amountId: "college", dueId: "college-due", displayId: "college-bill-amount" },
       { name: "Gym payment", amountId: "gym", dueId: "gym-due", displayId: "gym-bill-amount" },
+      { name: "Car insurance", amountId: "car-insurance", dueId: "car-insurance-due", displayId: "car-insurance-bill-amount" },
       { name: "Credit-card payments", amountId: "cards", dueId: "cards-due", displayId: "cards-bill-amount" }
     ];
     const creditCards = [1, 2, 3].map((number) => ({
@@ -910,6 +970,50 @@
         && first.getDate() === second.getDate();
     }
 
+    function renderWeekly() {
+      const current = readAmount("current");
+      const goal = readAmount("goal");
+      const deadlineValue = document.getElementById("deadline").value;
+      const remaining = Math.max(0, goal - current);
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const nextFriday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + (5 - today.getDay() + 7) % 7);
+      const dateFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" });
+      let fridayCount = null;
+      let deadline = null;
+
+      if (deadlineValue) {
+        const [year, month, day] = deadlineValue.split("-").map(Number);
+        deadline = new Date(year, month - 1, day);
+        const deadlineDay = Date.UTC(deadline.getFullYear(), deadline.getMonth(), deadline.getDate());
+        const fridayDay = Date.UTC(nextFriday.getFullYear(), nextFriday.getMonth(), nextFriday.getDate());
+        fridayCount = deadlineDay < fridayDay ? 0 : Math.floor((deadlineDay - fridayDay) / (7 * 86400000)) + 1;
+      }
+
+      let amount = null;
+      let summary;
+      if (goal === 0) {
+        summary = "Enter a savings goal greater than zero in Overview to calculate your weekly pace.";
+      } else if (remaining === 0) {
+        amount = 0;
+        summary = "You have already reached your savings goal.";
+      } else if (fridayCount === null) {
+        summary = "Choose a goal deadline in Overview to calculate your weekly pace.";
+      } else if (fridayCount === 0) {
+        summary = "No Fridays remain through your deadline. Choose a later deadline or contribute sooner.";
+      } else {
+        amount = Math.ceil(Math.round(remaining * 100) / fridayCount) / 100;
+        summary = `Set aside up to ${currency.format(amount)} each Friday to reach your goal within ${fridayCount} remaining Friday${fridayCount === 1 ? "" : "s"}.`;
+      }
+
+      document.getElementById("weekly-savings").textContent = amount === null ? "—" : currency.format(amount);
+      document.getElementById("weekly-summary").textContent = summary;
+      document.getElementById("weekly-remaining").textContent = currency.format(remaining);
+      document.getElementById("weekly-fridays").textContent = fridayCount === null ? "—" : String(fridayCount);
+      document.getElementById("weekly-next-friday").textContent = fridayCount > 0 ? dateFormat.format(nextFriday) : "—";
+      document.getElementById("weekly-deadline").textContent = deadline === null ? "—" : dateFormat.format(deadline);
+    }
+
     function getEventsForDate(date) {
       const events = [];
       if (date.getDay() === 5) {
@@ -929,7 +1033,8 @@
           events.push({
             type: "bill",
             name: bill.name,
-            amount: readAmount(bill.amountId)
+            amount: bill.amountId === "car-insurance" && document.getElementById(bill.amountId).value === ""
+              ? null : readAmount(bill.amountId)
           });
         }
       });
@@ -1041,7 +1146,8 @@
 
       billSchedules.forEach((bill) => {
         const amount = readAmount(bill.amountId);
-        document.getElementById(bill.displayId).textContent = amount === null ? "—" : currency.format(amount);
+        const missingInsurance = bill.amountId === "car-insurance" && document.getElementById(bill.amountId).value === "";
+        document.getElementById(bill.displayId).textContent = missingInsurance ? "Not entered" : amount === null ? "—" : currency.format(amount);
       });
       creditCards.forEach((card) => {
         const name = document.getElementById(card.nameId).value.trim() || card.fallbackName;
@@ -1078,7 +1184,7 @@
       const income = readAmount("income");
       const current = readAmount("current");
       const goal = readAmount("goal");
-      const expenseIds = ["phone", "ihg", "college", "gym", "groceries", "cards"];
+      const expenseIds = ["phone", "ihg", "college", "gym", "car-insurance", "groceries", "cards"];
       const expenses = expenseIds.map(readAmount);
       const invalid = income === null || current === null || goal === null || expenses.includes(null);
 
@@ -1137,9 +1243,10 @@
       if (leftover !== null && leftover < 0) {
         notice.textContent = `Your listed expenses plus the needed savings exceed your take-home income by ${currency.format(Math.abs(leftover))} per month. Consider lowering expenses or extending the deadline. The listed expense total may not include all bills.`;
       } else {
-        notice.textContent = "This leftover only subtracts the expenses listed here. Add housing, utilities, transportation, insurance, and other spending before treating it as available.";
+        notice.textContent = "This leftover only subtracts the expenses listed here. Add housing, utilities, transportation, and other unlisted spending before treating it as available.";
       }
       renderCalendar();
+      renderWeekly();
       saveInputs();
     }
 
@@ -1181,13 +1288,15 @@
     });
     document.querySelectorAll(".page-tab").forEach((tab) => {
       tab.addEventListener("click", () => {
-        const calendarSelected = tab.dataset.page === "calendar";
-        document.getElementById("overview-page").hidden = calendarSelected;
-        document.getElementById("calendar-page").hidden = !calendarSelected;
+        const selectedPage = tab.dataset.page;
+        ["overview", "weekly", "calendar"].forEach((page) => {
+          document.getElementById(`${page}-page`).hidden = page !== selectedPage;
+        });
         document.querySelectorAll(".page-tab").forEach((pageTab) => {
           pageTab.setAttribute("aria-pressed", String(pageTab === tab));
         });
-        if (calendarSelected) renderCalendar();
+        if (selectedPage === "calendar") renderCalendar();
+        if (selectedPage === "weekly") renderWeekly();
       });
     });
     renderCalendar();
